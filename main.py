@@ -1,13 +1,13 @@
-import tkinter as tk
+import tkinter
 import abc
 import uuid
-import random as rnd
+import random
 import time
 import math
 
 
 def random_color():
-    return "#{:06x}".format(rnd.randrange(0, 1 << 24))
+    return "#{:06x}".format(random.randrange(0, 1 << 24))
 
 
 class IObject:
@@ -117,7 +117,7 @@ class FrameStats(IRenderable):
 
         self.game.next_frame_canvas.create_text(
             650, 50, text=text, font=(
-                "Arial", 20), justify=tk.RIGHT)
+                "Arial", 20), justify=tkinter.RIGHT)
 
 
 class Ball(IRenderable, IIntersectable, IClickable):
@@ -128,7 +128,7 @@ class Ball(IRenderable, IIntersectable, IClickable):
         self._destroyed = False
 
         self.velocity = Vector2d(
-            rnd.randrange(-50, 50), rnd.randrange(-50, 50))
+            random.randrange(-50, 50), random.randrange(-50, 50))
         super().__init__(game)
 
     def render(self):
@@ -204,10 +204,10 @@ class Ball(IRenderable, IIntersectable, IClickable):
 
     def clicked(self):
         print("Clicked ball {0}".format(str(self.uuid)))
-        self.position.x = rnd.randrange(100, 700)
-        self.position.y = rnd.randrange(100, 600)
+        self.position.x = random.randrange(100, 700)
+        self.position.y = random.randrange(100, 600)
         self.velocity = Vector2d(
-            rnd.randrange(-50, 50), rnd.randrange(-50, 50))
+            random.randrange(-50, 50), random.randrange(-50, 50))
 
 
 class BallFactory:
@@ -224,32 +224,35 @@ class BallFactory:
         return False
 
     def create_random_ball(self):
-        radius = rnd.randrange(10, 50)
-        position = Vector2d(rnd.randrange(100, 700), rnd.randrange(100, 500))
+        radius = random.randrange(10, 50)
+        position = Vector2d(
+            random.randrange(
+                100, 700), random.randrange(
+                100, 500))
         ball = Ball(self.game, position, radius)
         while self.intersect(ball):
-            ball.position.x = rnd.randrange(100, 700)
-            ball.position.y = rnd.randrange(100, 500)
+            ball.position.x = random.randrange(100, 700)
+            ball.position.y = random.randrange(100, 500)
         self.game.objects[ball.uuid] = ball
         return ball
 
     def set_random_pos(self, old: Ball):
-        old.position.x = rnd.randrange(100, 700)
-        old.position.y = rnd.randrange(100, 500)
+        old.position.x = random.randrange(100, 700)
+        old.position.y = random.randrange(100, 500)
         while self.intersect(old):
-            old.position.x = rnd.randrange(100, 700)
-            old.position.y = rnd.randrange(100, 500)
+            old.position.x = random.randrange(100, 700)
+            old.position.y = random.randrange(100, 500)
 
 
 class Game:
     def __init__(self, debug=False):
-        self.root = tk.Tk()
+        self.root = tkinter.Tk()
         self.root.geometry('800x600')
 
-        self._frames = [tk.Canvas(self.root, bg='white')]
+        self._frames = [tkinter.Canvas(self.root, bg='white')]
         self._frame_index = 0
 
-        self.frame_canvas.pack(fill=tk.BOTH, expand=1)
+        self.frame_canvas.pack(fill=tkinter.BOTH, expand=1)
 
         self.objects = {}
 
@@ -285,10 +288,10 @@ class Game:
 
     def switch_frame(self):
         # self.frame_canvas.pack_forget()
-        self.frame_canvas.delete(tk.ALL)
+        self.frame_canvas.delete(tkinter.ALL)
         self._frame_index += 1
         self._frame_index = self.sanitize_frame_index()
-        # self.frame_canvas.pack(fill=tk.BOTH, expand=1)
+        # self.frame_canvas.pack(fill=tkinter.BOTH, expand=1)
 
     def tick(self):
         self.switch_frame()
