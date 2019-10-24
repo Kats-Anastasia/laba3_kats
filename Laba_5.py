@@ -178,8 +178,6 @@ def new_game(event=''):
     canv.bind('<Button-1>', g1.fire2_start)
     canv.bind('<ButtonRelease-1>', g1.fire2_end)
     canv.bind('<Motion>', g1.targetting)
-
-    z = 0.03
     t1.live = 1
     t2.live = 1
     while t1.live or balls:
@@ -221,4 +219,3 @@ t2 = target()
 screen1 = canv.create_text(400, 300, text='', font='28')
 g1 = gun()
 new_game()
-mainloop()
