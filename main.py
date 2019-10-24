@@ -5,8 +5,9 @@ import random as rnd
 import time
 import math
 
+
 def random_color():
-    return "#{:06x}".format(rnd.randrange(0, 1<<24))
+    return "#{:06x}".format(rnd.randrange(0, 1 << 24))
 
 
 class IObject:
@@ -68,7 +69,7 @@ class Vector2d:
         self.x *= other
         self.y *= other
         return self
-    
+
     def __isub__(self, other):
         if isinstance(other, Vector2d):
             self.x -= other.x
@@ -76,7 +77,7 @@ class Vector2d:
             return self
         else:
             raise TypeError("Only vector can be added to vector")
-    
+
     def __sub__(self, other):
         if isinstance(other, Vector2d):
             s = Vector2d(self.x, self.y)
@@ -85,20 +86,20 @@ class Vector2d:
             return s
         else:
             raise TypeError("Only vector can be added to vector")
-    
 
     def __abs__(self):
-        return math.sqrt(self.x**2+self.y**2)
+        return math.sqrt(self.x**2 + self.y**2)
 
 
 class IIntersectable(IObject, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def contains(self, point: Vector2d):
         pass
-    
-    @abc.abstractmethod    
-    def intersect(self,other):
+
+    @abc.abstractmethod
+    def intersect(self, other):
         pass
+
 
 class IClickable(IObject):
     def clicked(self):
@@ -111,9 +112,12 @@ class FrameStats(IRenderable):
 
     def render_debug(self):
         duration = self.game.tick_stamp - self.game.last_tick_stamp
-        text = "Tick duration: {0} ms\nFPS: {1}".format(int(1000*duration), int(1.0/duration))
+        text = "Tick duration: {0} ms\nFPS: {1}".format(
+            int(1000 * duration), int(1.0 / duration))
 
-        self.game.next_frame_canvas.create_text(650, 50, text=text, font=("Arial", 20), justify=tk.RIGHT)
+        self.game.next_frame_canvas.create_text(
+            650, 50, text=text, font=(
+                "Arial", 20), justify=tk.RIGHT)
 
 
 class Ball(IRenderable, IIntersectable, IClickable):
@@ -123,34 +127,58 @@ class Ball(IRenderable, IIntersectable, IClickable):
         self.color = random_color()
         self._destroyed = False
 
-        self.velocity = Vector2d(rnd.randrange(-50, 50), rnd.randrange(-50, 50))
+        self.velocity = Vector2d(
+            rnd.randrange(-50, 50), rnd.randrange(-50, 50))
         super().__init__(game)
 
     def render(self):
-        self.game.next_frame_canvas.create_oval(self.position.x - self.radius, self.position.y - self.radius,
-                                                self.position.x + self.radius, self.position.y + self.radius,
-                                                fill=self.color, width=0)
+        self.game.next_frame_canvas.create_oval(
+            self.position.x - self.radius,
+            self.position.y - self.radius,
+            self.position.x + self.radius,
+            self.position.y + self.radius,
+            fill=self.color,
+            width=0)
 
     def render_debug(self):
-        self.game.next_frame_canvas.create_oval(self.position.x - 2, self.position.y - 2,
-                                                self.position.x + 2, self.position.y + 2,
-                                                fill='black', width=0)
-        self.game.next_frame_canvas.create_text(self.position.x, self.position.y + 15,
-                                                text=str(self.uuid).split('-')[0], fill='black')
+        self.game.next_frame_canvas.create_oval(
+            self.position.x - 2,
+            self.position.y - 2,
+            self.position.x + 2,
+            self.position.y + 2,
+            fill='black',
+            width=0)
+        self.game.next_frame_canvas.create_text(
+            self.position.x,
+            self.position.y + 15,
+            text=str(
+                self.uuid).split('-')[0],
+            fill='black')
 
-        vel_base = self.position + self.velocity * self.radius * (1 / abs(self.velocity))
-        self.game.next_frame_canvas.create_line(vel_base.x, vel_base.y,
-                                                vel_base.x + self.velocity.x, vel_base.y + self.velocity.y,
-                                                width='3')
+        vel_base = self.position + self.velocity * \
+            self.radius * (1 / abs(self.velocity))
+        self.game.next_frame_canvas.create_line(
+            vel_base.x,
+            vel_base.y,
+            vel_base.x +
+            self.velocity.x,
+            vel_base.y +
+            self.velocity.y,
+            width='3')
 
     def contains(self, point: Vector2d):
-        return self.radius > abs(complex(self.position.x - point.x, self.position.y - point.y))
+        return self.radius > abs(
+            complex(
+                self.position.x -
+                point.x,
+                self.position.y -
+                point.y))
 
-    def intersect (self, other):
-        if isinstance (other, Ball):
-            s=self.position-other.position
+    def intersect(self, other):
+        if isinstance(other, Ball):
+            s = self.position - other.position
             return abs(s) < self.radius + other.radius
-                
+
     @property
     def destroyed(self):
         return self._destroyed
@@ -161,7 +189,7 @@ class Ball(IRenderable, IIntersectable, IClickable):
         if self.position.x + self.radius > self.game.maxw:
             self.velocity.x *= -1
             self.position.x = self.game.maxw - self.radius
-            
+
         if self.position.y + self.radius > self.game.maxh:
             self.velocity.y *= -1
             self.position.y = self.game.maxh - self.radius
@@ -178,7 +206,8 @@ class Ball(IRenderable, IIntersectable, IClickable):
         print("Clicked ball {0}".format(str(self.uuid)))
         self.position.x = rnd.randrange(100, 700)
         self.position.y = rnd.randrange(100, 600)
-        self.velocity = Vector2d(rnd.randrange(-50, 50), rnd.randrange(-50, 50))
+        self.velocity = Vector2d(
+            rnd.randrange(-50, 50), rnd.randrange(-50, 50))
 
 
 class BallFactory:
@@ -189,28 +218,29 @@ class BallFactory:
         for v in self.game.objects.values():
             if v == ball:
                 continue
-            if isinstance(v,IIntersectable):
+            if isinstance(v, IIntersectable):
                 if ball.intersect(v):
                     return True
-        return False    
+        return False
 
     def create_random_ball(self):
         radius = rnd.randrange(10, 50)
         position = Vector2d(rnd.randrange(100, 700), rnd.randrange(100, 500))
         ball = Ball(self.game, position, radius)
         while self.intersect(ball):
-            ball.position.x=rnd.randrange(100, 700)
-            ball.position.y=rnd.randrange(100, 500)
+            ball.position.x = rnd.randrange(100, 700)
+            ball.position.y = rnd.randrange(100, 500)
         self.game.objects[ball.uuid] = ball
         return ball
 
-    def set_random_pos(self,old: Ball):
-        old.position.x=rnd.randrange(100, 700)
-        old.position.y=rnd.randrange(100, 500)
+    def set_random_pos(self, old: Ball):
+        old.position.x = rnd.randrange(100, 700)
+        old.position.y = rnd.randrange(100, 500)
         while self.intersect(old):
-            old.position.x=rnd.randrange(100, 700)
-            old.position.y=rnd.randrange(100, 500)
-        
+            old.position.x = rnd.randrange(100, 700)
+            old.position.y = rnd.randrange(100, 500)
+
+
 class Game:
     def __init__(self, debug=False):
         self.root = tk.Tk()
@@ -233,14 +263,13 @@ class Game:
 
         ctr = FrameStats(self)
         self.objects[ctr.uuid] = ctr
-        
+
         self._factory = BallFactory(self)
-        self.g = Vector2d(0,1)
-        
-        self.cos=math.cos(0.01)
-        self.sin=math.sin(0.01)
-        
-        
+        self.g = Vector2d(0, 1)
+
+        self.cos = math.cos(0.01)
+        self.sin = math.sin(0.01)
+
     def sanitize_frame_index(self, index=None):
         if index is None:
             index = self._frame_index
@@ -265,30 +294,32 @@ class Game:
         self.switch_frame()
 
         self.tick_stamp = time.time()
-        d=[]
-        
-        old_x=self.g.x
-        self.g.x=old_x*self.cos-self.g.y*self.sin
-        self.g.y=old_x*self.sin+self.g.y*self.cos
-       
+        d = []
+
+        old_x = self.g.x
+        self.g.x = old_x * self.cos - self.g.y * self.sin
+        self.g.y = old_x * self.sin + self.g.y * self.cos
+
         if not self.pause:
             for key in self.objects:
                 obj = self.objects[key]
                 d.append(obj)
                 for key1 in self.objects:
                     obj1 = self.objects[key1]
-                    if obj1 in d :
+                    if obj1 in d:
                         continue
-                    if isinstance(obj,IIntersectable) and isinstance(obj1,IIntersectable):
+                    if isinstance(
+                            obj, IIntersectable) and isinstance(
+                            obj1, IIntersectable):
                         if obj.intersect(obj1):
-                            obj.velocity*=-1
-                            obj1.velocity*=-1
-                            obj.position+=obj.velocity*0.02
-                            obj1.position+=obj1.velocity*0.02
-                if isinstance(obj,Ball):
-                    obj.velocity += self.g            
+                            obj.velocity *= -1
+                            obj1.velocity *= -1
+                            obj.position += obj.velocity * 0.02
+                            obj1.position += obj1.velocity * 0.02
+                if isinstance(obj, Ball):
+                    obj.velocity += self.g
                 obj.tick()
-                
+
         for key in self.objects:
             if self.objects[key].destroyed:
                 del self.objects[key]
@@ -307,7 +338,9 @@ class Game:
         point = Vector2d(event.x, event.y)
         for key in self.objects:
             obj = self.objects[key]
-            if isinstance(obj, IIntersectable) and isinstance(obj, IClickable) and obj.contains(point):
+            if isinstance(
+                    obj, IIntersectable) and isinstance(
+                    obj, IClickable) and obj.contains(point):
                 self._factory.set_random_pos(obj)
                 return
 
