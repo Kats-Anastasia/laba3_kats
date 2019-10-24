@@ -1,6 +1,4 @@
-from graph import *
 import graph
-from time import sleep
 
 
 def ellipse(x, y, x1, y1, a):
@@ -15,12 +13,12 @@ def ellipse(x, y, x1, y1, a):
 
 
 def ellipse1(x, y, a, b, x1, y1):  # функция для элипсов, наклоненных в правую сторону
-    ellipse(131 * a + x1 + x, 33 * b + y1 + y, 121 * a + x1 + x, 56 * b + \
+    ellipse(131 * a + x1 + x, 33 * b + y1 + y, 121 * a + x1 + x, 56 * b +
             y1 + y, ((131 * a - 121 * a) ** 2 + (56 * b - 33 * b) ** 2) ** 0.5 + 0.5)
 
 
 def ellipse2(x, y, a, b, x1, y1):  # Функция для элипсов, наклоненных в левую сторону
-    ellipse(321 * a + x1 + x, 20 * b + y1 + y, 331 * a + x1 + x, 43 * b + \
+    ellipse(321 * a + x1 + x, 20 * b + y1 + y, 331 * a + x1 + x, 43 * b +
             y1 + y, ((321 * a - 331 * a) ** 2 + (43 * b - 20 * b) ** 2) ** 0.5 + 0.5)
 
 
@@ -624,12 +622,12 @@ def ellipse(x, y, x1, y1, a):
 
 
 def ellipse1(x, y, a, b, x1, y1):
-    ellipse(131 * a + x1 + x, 33 * b + y1 + y, 121 * a + x1 + x, 56 * b +
+    ellipse(131 * a + x1 + x, 33 * b + y1 + y, 121 * a + x1 + x, 56 * b + \
             y1 + y, ((131 * a - 121 * a) ** 2 + (56 * b - 33 * b) ** 2) ** 0.5 + 0.5)
 
 
 def ellipse2(x, y, a, b, x1, y1):  # Функция для элипсов, наклоненных в левую сторону
-    ellipse(321 * a + x1 + x, 20 * b + y1 + y, 331 * a + x1 + x, 43 * b +
+    ellipse(321 * a + x1 + x, 20 * b + y1 + y, 331 * a + x1 + x, 43 * b + \
             y1 + y, ((321 * a - 331 * a) ** 2 + (43 * b - 20 * b) ** 2) ** 0.5 + 0.5)
 
 
