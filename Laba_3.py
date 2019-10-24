@@ -144,8 +144,8 @@ def panda(x, y, a):
                                      (354 * a + x, 172 * a + y),
                                      (350 * a + x, 168 * a + y),
                                      (340 * a + x, 133 * a + y)]))
-    panda_list.extend(
-        ellipse( 318 * a + x, 192 * a + y, 318 * a + x, 192 * a + y, 25 * a))
+    panda_list.extend(ellipse(318 * a + x, 192 * a + y,
+                              318 * a + x, 192 * a + y, 25 * a))
     panda_list.append(graph.polygon([(286 * a + x, 173 * a + y),
                                      (291 * a + x, 175 * a + y),
                                      (293 * a + x, 178 * a + y),
@@ -215,7 +215,7 @@ def update():
 
 x = 0
 y = 0
-graph.brushColor(255, 175, 128) # Фон
+graph.brushColor(255, 175, 128)  # Фон
 graph.rectangle(0, 0, 500, 333)
 plant(1, 0, 1, 0)
 plant(0.322, 89.7, 0.707, 71)
