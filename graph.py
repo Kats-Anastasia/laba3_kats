@@ -1,13 +1,17 @@
+# -*- coding: utf-8 -*-
 from sys import platform
 import tkinter
 from random import randint
-# -*- coding: utf-8 -*-
+try:
+    from PIL import ImageTk, Image
+except Exception:
+    pass
 """
 GRAPH - модуль для простой графики в Python.
-  (C) К. Поляков, 2017-2018
-  e-mail: kpolyakov@mail.ru
-  web: http://kpolyakov.spb.ru
-  Версия 1.4.1
+    (C) К. Поляков, 2017-2018
+    e-mail: kpolyakov@mail.ru
+    web: http://kpolyakov.spb.ru
+    Версия 1.4.1
 
 Модуль graph - это "обертка" над стандартной библиотекой tkinter,
 позволяющая рисовать простыми командами в отдельном графическом окне.
@@ -22,16 +26,16 @@ Copyright (c) 2016-2018, Константин Поляков
 Разрешается повторное распространение и использование как в виде исходного
 кода, так и в двоичной форме, с изменениями или без, при соблюдении
 следующих условий:
-  1) При повторном распространении исходного кода должно оставаться указанное
-     выше уведомление об авторском праве, этот список условий и последующий
-     отказ от гарантий.
-  2) При повторном распространении двоичного кода должна сохраняться указанная
-     выше информация об авторском праве, этот список условий и последующий
-     отказ от гарантий в документации и/или в других материалах,
-     поставляемых при распространении.
-  3) Ни название Организации, ни имена ее сотрудников не могут быть
-     использованы в качестве поддержки или продвижения продуктов,
-     основанных на этом ПО без предварительного письменного разрешения.
+    1) При повторном распространении исходного кода должно оставаться указанное
+         выше уведомление об авторском праве, этот список условий и последующий
+         отказ от гарантий.
+    2) При повторном распространении двоичного кода должна сохраняться указанная
+         выше информация об авторском праве, этот список условий и последующий
+         отказ от гарантий в документации и/или в других материалах,
+         поставляемых при распространении.
+    3) Ни название Организации, ни имена ее сотрудников не могут быть
+         использованы в качестве поддержки или продвижения продуктов,
+         основанных на этом ПО без предварительного письменного разрешения.
 
 ДАННОЕ ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ «КАК ЕСТЬ», БЕЗ ЛЮБОГО ВИДА
 ГАРАНТИЙ, ЯВНО ВЫРАЖЕННЫХ ИЛИ ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ, НО НЕ ОГРАНИЧИВАЯСЬ
@@ -83,15 +87,9 @@ elif platform == "linux":
 
 DEF_GRAPH_WIDTH = 500
 DEF_GRAPH_HEIGHT = 600
-
-try:
-    from PIL import ImageTk, Image
-except:
-    pass
-
 NW = tkinter.NW
 N = tkinter.N
-NE =  tkinter.NE
+NE = tkinter.NE
 W = tkinter.W
 CENTER = tkinter.CENTER
 E = tkinter.E
@@ -99,7 +97,6 @@ SW = tkinter.SW
 S = tkinter.S
 SE = tkinter.SE
 
-# ----------------------------------
 
 class onTimerCall():
     def __init__(self, _func, _timeInterval):
@@ -107,7 +104,6 @@ class onTimerCall():
         self.timeInterval = _timeInterval
         self.active = True
 
-# ----------------------------------
 
 def __initGraph__():
     global _win, _C, _Cw, _Ch, _Cpos
@@ -116,110 +112,103 @@ def __initGraph__():
     global _images
     _win = tkinter.Tk()
     _win.configure(bg="white")
-    _win.geometry(str(DEF_GRAPH_WIDTH) + "x" +
-                  str(DEF_GRAPH_HEIGHT) + "+100+100")
+    _win.geometry(str(DEF_GRAPH_WIDTH) + "x" + str(DEF_GRAPH_HEIGHT) + "+100+100")
     _viewPort = None
     _Cw = DEF_GRAPH_WIDTH
     _Ch = DEF_GRAPH_HEIGHT
-    _C = tkinter.Canvas(_win, background = 'white', bd = 0, highlightthickness = 1,
-                        width = _Cw, height = _Ch)
+    _C = tkinter.Canvas(_win, background='white', bd=0, highlightthickness=1, width=_Cw, height=_Ch)
     _Cpos = [0, 0]
-    _C.place(x = _Cpos[0], y = _Cpos[1])
+    _C.place(x=_Cpos[0], y=_Cpos[1])
     _penColor = "black"
     _penSize = 1
     _brushColor = ""
     _pos = (0, 0)
     _timerCalls = []
     _images = []
-    
-# ----------------------------------
+
 
 def mainWindow():
     return _win
+
+
 def canvas():
     return _C
 
-# ----------------------------------
 
-def canvasPos(x = -1, y = -1):
+def canvasPos(x=-1, y=-1):
     global _C, _Cpos
     if x >= 0:
-        _C.place(x = x, y = y)
+        _C.place(x=x, y=y)
         _Cpos = [x, y]
     else:
         return tuple(_Cpos)
 
-# ----------------------------------
 
-def canvasSize(w = -1, h = -1):
+def canvasSize(w=-1, h=-1):
     global _C, _Cw, _Ch
     if w > 0:
-        _C.config(width = w, height = h)
+        _C.config(width=w, height=h)
         _Cw = w
         _Ch = h
     else:
         return (_Cw, _Ch)
 
-# ----------------------------------
 
 def pointInView(x, y):
     w, h = windowSize()
     return (x > 0 and y > 0 and x < h and y < h)
+
+
 def circleInView(x, y, r):
     w, h = windowSize()
-    return (x > r and y > r and x < w - r and y < h - r)
+    return (x > r and y > r and x < w-r and y < h-r)
 
-# ----------------------------------
 
-def windowSize(w = -1, h = -1):
+def windowSize(w=-1, h=-1):
     global _win
     _win.update()
     geom = _win.geometry().split("+")
     if w != -1:
-        _win.geometry( "%dx%d+%s+%s" % (w, h, geom[1], geom[2]) )
+        _win.geometry("%dx%d+%s+%s" % (w, h, geom[1], geom[2]))
     else:
         w, h = map(int, geom[0].split("x"))
         return (w, h)
 
-# ----------------------------------
 
-def viewCoords(x1 = None, x2 = -1, y1 = -1, y2 = -1):
+def viewCoords(x1=None, x2=-1, y1=-1, y2=-1):
     global _viewPort
     if ~(x1 is None):
         _viewPort = (x1, x2, y1, y2)
     else:
-        geom = windowSize()
+        # geom = windowSize()
         _viewPort = None
 
-# ----------------------------------
 
-def penColor(c = -1, g = -1, b = -1):
+def penColor(c=-1, g=-1, b=-1):
     global _penColor
     if type(c) == tuple:
         c, g, b = c
     if c != -1:
         if g != -1:
-        c = "#%02X%02X%02X" % (c, g, b)
+            c = "#%02X%02X%02X" % (c, g, b)
         _penColor = c
     else:
         return _penColor
 
-# ----------------------------------
 
-def penSize(c = -1):
+def penSize(c=-1):
     global _penSize
     if c != -1:
         _penSize = c
     else:
         return _penSize
 
-# ----------------------------------
 
-def brushColor(c = -1, g = -1, b = -1):
+def brushColor(c=-1, g=-1, b=-1):
     global _brushColor
     if type(c) == tuple:
         c, g, b = c
-    if c != -1 :
+    if c != -1:
         if c != "":
             if g != -1:
                 c = "#%02X%02X%02X" % (c, g, b)
@@ -227,7 +216,6 @@ def brushColor(c = -1, g = -1, b = -1):
     else:
         return _brushColor
 
-# ----------------------------------
 
 def randColor():
     r = randint(0, 255)
@@ -236,61 +224,51 @@ def randColor():
     col = "#%02X%02X%02X" % (r, g, b)
     return col
 
-# ----------------------------------
 
 def transformCoord(x, y):
     global _viewPort
     if _viewPort:
         x1, x2, y1, y2 = _viewPort
         w, h = windowSize()
-        x = (x - x1) * w / (x2 - x1)
-        y = (y2 - y) * h / (y2 - y1)
+        x = (x - x1)*w/(x2 - x1)
+        y = (y2 - y)*h/(y2 - y1)
     return x, y
 
-# ----------------------------------
 
-def moveTo(x, y = -1):
+def moveTo(x, y=-1):
     global _pos
     if type(x) == tuple:
         x, y = x
     x, y = transformCoord(x, y)
     _pos = (x, y)
 
-# ----------------------------------
 
-def lineTo(x, y = -1):
+def lineTo(x, y=-1):
     global _pos
     if type(x) == tuple:
         x, y = x
-    x, y = transformCoord (x, y)
-    line = _C.create_line(_pos[0], _pos[1], x, y,
-                          fill = _penColor,
-                          width = _penSize)
+    x, y = transformCoord(x, y)
+    line = _C.create_line(_pos[0], _pos[1], x, y, fill=_penColor, width=_penSize)
     _pos = (x, y)
     return line
 
-# ----------------------------------
 
-def point(x, y, col = -1):
+def point(x, y, col=-1):
     old_col = penColor()
     if col != -1:
         penColor(col)
     moveTo(x, y)
-    pt = lineTo(x + 1, y)
+    pt = lineTo(x+1, y)
     penColor(old_col)
     return pt
 
-# ----------------------------------
 
 def line(x1, y1, x2, y2):
-    x1, y1 = transformCoord (x1, y1)
-    x2, y2 = transformCoord (x2, y2)
-    line = _C.create_line(x1, y1, x2, y2,
-                 fill = _penColor,
-                 width = _penSize)
+    x1, y1 = transformCoord(x1, y1)
+    x2, y2 = transformCoord(x2, y2)
+    line = _C.create_line(x1, y1, x2, y2, fill=_penColor, width=_penSize)
     return line
 
-# ----------------------------------
 
 def unpackCoord(points):
     coord = []
@@ -299,156 +277,129 @@ def unpackCoord(points):
         coord.extend((x, y))
     return coord
 
-# ----------------------------------
 
 def polyline(points):
     coord = unpackCoord(points)
-    line = _C.create_line(*coord,
-                 fill = _penColor,
-                 width = _penSize)
+    line = _C.create_line(*coord, fill=_penColor, width=_penSize)
     return line
 
-# ----------------------------------
 
 def rectangle(x1, y1, x2, y2):
-    x1, y1 = transformCoord (x1, y1)
-    x2, y2 = transformCoord (x2, y2)
-    rect = _C.create_rectangle(x1, y1, x2, y2,
-                      outline = _penColor,
-                      width = _penSize,
-                      fill = _brushColor)
+    x1, y1 = transformCoord(x1, y1)
+    x2, y2 = transformCoord(x2, y2)
+    rect = _C.create_rectangle(x1, y1, x2, y2, outline=_penColor, width=_penSize, fill=_brushColor)
     return rect
 
-# ----------------------------------
 
 def circle(x, y, R):
-    x1 = x - R; y1 = y - R
-    x2 = x + R; y2 = y + R
-    x1, y1 = transformCoord (x1, y1)
-    x2, y2 = transformCoord (x2, y2)
-    circ = _C.create_oval(x1, y1, x2, y2,
-                 outline = _penColor,
-                 width = _penSize,
-                 fill = _brushColor)
+    x1 = x - R
+    y1 = y - R
+    x2 = x + R
+    y2 = y + R
+    x1, y1 = transformCoord(x1, y1)
+    x2, y2 = transformCoord(x2, y2)
+    circ = _C.create_oval(x1, y1, x2, y2, outline=_penColor, width=_penSize, fill=_brushColor)
     return circ
 
-# ----------------------------------
 
 def polygon(points):
     coord = unpackCoord(points)
     if points[0] != points[-1]:
-        points.append( points[0] )
-    plg = _C.create_polygon(*coord,
-        outline=_penColor, width = _penSize,
-        fill=_brushColor)
+        points.append(points[0])
+    plg = _C.create_polygon(*coord, outline=_penColor, width=_penSize, fill=_brushColor)
     return plg
 
-# ----------------------------------
 
-def image(x, y, fileName, anchor = NW, **kwargs):
+def image(x, y, fileName, anchor=NW, **kwargs):
     if type(x) == tuple:
         fileName = y
         x, y = x
-    x, y = transformCoord ( x, y )
+    x, y = transformCoord(x, y)
     try:
-       if fileName.lower().endswith('.gif'):
-           newImage = tkinter.PhotoImage(file = fileName)
-       else:
-           im = Image.open(fileName)
-           newImage = ImageTk.PhotoImage(im)
-    except:
+        if fileName.lower().endswith('.gif'):
+            newImage = tkinter.PhotoImage(file=fileName)
+        else:
+            im = Image.open(fileName)
+            newImage = ImageTk.PhotoImage(im)
+    except Exception:
         pass
     _images.append(newImage)
-    img = _C.create_image(x, y, image = newImage, anchor = anchor, **kwargs)
+    img = _C.create_image(x, y, image=newImage, anchor=anchor, **kwargs)
     return img
 
-# ----------------------------------
 
 def label(_text, _x, _y, **kwargs):
     kwargs["bg"] = kwargs.get("bg", "white")
-    lbl = tkinter.Label(_win, text = _text,  **kwargs)
+    lbl = tkinter.Label(_win, text=_text, **kwargs)
     _x, _y = transformCoord(_x, _y)
-    lbl.place(x = _x, y = _y)
+    lbl.place(x=_x, y=_y)
     return lbl
 
-# ----------------------------------
 
 def button(_text, _x, _y, **kwargs):
-    btn = tkinter.Button(_win, text = _text, **kwargs)
+    btn = tkinter.Button(_win, text=_text, **kwargs)
     _x, _y = transformCoord(_x, _y)
-    btn.place(x = _x, y = _y)
+    btn.place(x=_x, y=_y)
     return btn
- 
-# ----------------------------------
+
 
 def coords(obj):
-    #return _C.coords(obj)
+    # return _C.coords(obj)
     return _C.bbox(obj)
 
-# ----------------------------------
 
 def center(obj):
     x1, y1, x2, y2 = coords(obj)
-    return (x1 + x2) / 2, (y1 + y2) / 2
+    return (x1+x2)/2, (y1+y2)/2
 
-# ----------------------------------
 
 def xCoord(obj):
     x1, y1, x2, y2 = coords(obj)
     return x1
 
-# ----------------------------------
 
 def yCoord(obj):
     x1, y1, x2, y2 = coords(obj)
     return y1
 
-# ----------------------------------
 
 def moveObjectTo(obj, x, y):
     x, y = transformCoord(x, y)
     coords = _C.coords(obj)
     _C.move(obj, x-coords[0], y-coords[1])
 
-# ----------------------------------
 
 def moveObjectBy(obj, dx, dy):
     if _viewPort:
         x1, x2, y1, y2 = _viewPort
         w, h = windowSize()
-        dx = dx * w / (x2 - x1)
-        dy = - dy * h / (y2 - y1)
+        dx = dx*w/(x2 - x1)
+        dy = - dy*h/(y2 - y1)
     _C.move(obj, dx, dy)
 
-# ----------------------------------
 
 def deleteObject(obj):
     _C.delete(obj)
 
-# ----------------------------------
 
 def changeCoords(obj, points):
     coord = unpackCoord(points)
     _C.coords(obj, *coord)
 
-# ----------------------------------
- 
+
 def changeProperty(obj, **kwargs):
     _C.itemconfigure(obj, **kwargs)
 
-# ----------------------------------
 
 def changePenColor(obj, color):
-    _C.itemconfigure(obj, outline = color)
+    _C.itemconfigure(obj, outline=color)
 
-# ----------------------------------
 
 def changeFillColor(obj, color):
-    _C.itemconfigure(obj, fill = color)
+    _C.itemconfigure(obj, fill=color)
 
-# ----------------------------------
 
-def onMouseEvent(eventName, fn = None, btn = 0):
+def onMouseEvent(eventName, fn=None, btn=0):
     eventStr = "<%s>" % eventName
     if btn == 0:
         if type(fn) == int:
@@ -456,39 +407,39 @@ def onMouseEvent(eventName, fn = None, btn = 0):
             fn = None
     if btn > 0:
         eventStr = "<%s-%d>" % (eventName, btn)
-    _C.bind(eventStr, fn);
-    listen()
-
-# ----------------------------------
-
-def onMouseMove(fn = None):
-    _C.bind("<Motion>", fn);
+    _C.bind(eventStr, fn)
     listen()
 
 
-def onMouseButtonMove(fn = None, btn = 0):
-    _C.bind("<B1-Motion>", fn);
+def onMouseMove(fn=None):
+    _C.bind("<Motion>", fn)
     listen()
 
 
-def onMouseDown(fn = None, btn = 0):
+def onMouseButtonMove(fn=None, btn=0):
+    _C.bind("<B1-Motion>", fn)
+    listen()
+
+
+def onMouseDown(fn=None, btn=0):
     onMouseEvent("Button", fn, btn)
 
 
-def onMouseUp(fn = None, btn = 0):
+'''
+def onMouseUp(fn=None, btn=0):
     onMouseEvent("ButtonRelease", fn, btn)
+'''
 
 
-def onMouseClick(fn = None, btn = 0):
+def onMouseClick(fn=None, btn=0):
     onMouseUp(fn, btn)
 
 
-def onMouseDblClick(fn = None, btn = 0):
+def onMouseDblClick(fn=None, btn=0):
     onMouseEvent("Double-Button", fn, btn)
 
-# ----------------------------------
 
-def onMouseUp(fn = None, btn = 0):
+def onMouseUp(fn=None, btn=0):
     eventStr = "<ButtonRelease>"
     if btn == 0:
         if type(fn) == int:
@@ -496,41 +447,37 @@ def onMouseUp(fn = None, btn = 0):
             fn = None
     if btn > 0:
         eventStr = "<ButtonRelease-%d>" % btn
-    _C.bind(eventStr, fn);
+    _C.bind(eventStr, fn)
     listen()
 
-# ----------------------------------
 
-def onKey(keyStr, fn = None):
+def onKey(keyStr, fn=None):
     if type(keyStr) == str:
-        _C.bind("<KeyPress-%s>" % keyStr, fn);
+        _C.bind("<KeyPress-%s>" % keyStr, fn)
     else:
-        _C.bind("<KeyPress>", keyStr);
+        _C.bind("<KeyPress>", keyStr)
     listen()
 
-# ----------------------------------
 
 def listen():
     _C.focus_force()
 
-# ----------------------------------
-def onTimer(func, _time = -1):
+
+def onTimer(func, _time=-1):
     global _timerCalls
     if _time < 0:
         _time = 30
     timerId = onTimerCall(func, _time)
-    _timerCalls.append( timerId )
+    _timerCalls.append(timerId)
     return timerId
 
-# ----------------------------------
 
 def killTimer(timerId):
     global _timerCalls
     if timerId in _timerCalls:
-        _timerCalls.remove( timerId )
+        _timerCalls.remove(timerId)
         timerId.active = False
 
-# ----------------------------------
 
 def runLoopFunc(timerCall):
     def timerFunc():
@@ -539,23 +486,20 @@ def runLoopFunc(timerCall):
             _win.after(timerCall.timeInterval, timerFunc)
     return timerFunc
 
-# ----------------------------------
 
 def run():
     for timerCall in _timerCalls:
         runLoopFunc(timerCall)()
     _win.mainloop()
 
-# ----------------------------------
 
 def close():
     _win.destroy()
 
-###########################################
 
 __initGraph__()
 if __name__ == "__main__":
-    windowSize ( 500, 250 )
+    windowSize(500, 250)
 
     for i in range(0, 100, 10):
         line(0, 0, 100, i)
