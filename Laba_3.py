@@ -14,14 +14,14 @@ def ellipse(x, y, x1, y1, a):
 
 def ellipse1(x, y, a, b, x1, y1):  # функция для элипсов, наклоненных вправо
     ellipse(131 * a + x1 + x, 33 * b + y1 + y, 121 * a + x1 + x, 56 * b +
-            y1 + y, ((131 * a - 121 * a) ** 2 + (56 * b - 33 * b) ** 2)
-                     ** 0.5 + 0.5)
+            y1 + y, ((131 * a - 121 * a) ** 2 +
+            (56 * b - 33 * b) ** 2) ** 0.5 + 0.5)
 
 
 def ellipse2(x, y, a, b, x1, y1):  # Функция для элипсов, наклоненных влево
     ellipse(321 * a + x1 + x, 20 * b + y1 + y, 331 * a + x1 + x, 43 * b +
-            y1 + y, ((321 * a - 331 * a) ** 2 + (43 * b - 20 * b) ** 2) 
-                     ** 0.5 + 0.5)
+            y1 + y, ((321 * a - 331 * a) ** 2 +
+            (43 * b - 20 * b) ** 2) ** 0.5 + 0.5)
 
 
 def plant(a, x, b, y):
@@ -108,8 +108,8 @@ def panda(x, y, a):
                                      (304 * a + x, 128 * a + y),
                                      (316 * a + x, 122 * a + y),
                                      (318 * a + x, 122 * a + y)]))
-    panda_list.extend(
-        ellipse(402 * a + x, 184 * a + y, 296 * a + x, 184 * a + y, 130 * a))
+    panda_list.extend(ellipse(402 * a + x, 184 * a + y,
+                              296 * a + x, 184 * a + y, 130 * a))
     graph.brushColor("black")
     graph.penColor("black")
     panda_list.append(graph.polygon([(276 * a + x, 158 * a + y),
