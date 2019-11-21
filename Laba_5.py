@@ -317,7 +317,7 @@ class Game():
             g1.power_up()
         time.sleep(3)
         canv.itemconfig(screen1, text='')
-        new_game = Game()
+        Game()
 
 
 root = tkinter.Tk()
@@ -328,4 +328,4 @@ canv.pack(fill=tkinter.BOTH, expand=1)
 t1 = target()
 t2 = target()
 screen1 = canv.create_text(400, 300, text='', font='28')
-new_game = Game()
+Game()
