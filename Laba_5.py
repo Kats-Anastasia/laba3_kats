@@ -61,8 +61,8 @@ class ball():
             )
         else:
             for i in range(len(self.points) // 2):
-                self.points[2*i + 1] -= self.vy
-                self.points[2*i] += self.vx
+                self.points[2 * i + 1] -= self.vy
+                self.points[2 * i] += self.vx
                 canv.coords(
                     self.id,
                     self.points
@@ -97,7 +97,7 @@ class ball():
         self.timer += 0.03
         if abs(self.vy) < 0.001:
             self.time += 0.03
-        
+
     def hittest(self, obj):
         """Функция проверяет сталкивалкивается ли данный обьект с целью,
         описываемой в обьекте obj.
@@ -139,15 +139,15 @@ class gun():
         self.game.bullet += 1
         numbers = [0, 3, 4, 5, 6, 7]
         n1 = choice(numbers)
-        new_ball = ball(y = self.y, n = n1)
+        new_ball = ball(y=self.y, n=n1)
         self.an = math.atan((event.y - new_ball.y) / (event.x - new_ball.x))
         new_ball.vx = self.f2_power * math.cos(self.an)
         new_ball.vy = - self.f2_power * math.sin(self.an)
-        
+
         self.game.balls += [new_ball]
         self.f2_on = 0
         self.f2_power = 10
-        
+
     def targetting(self, event=0):
         """Прицеливание. Зависит от положения мыши."""
         if event:
@@ -168,6 +168,7 @@ class gun():
             canv.itemconfig(self.id, fill='orange')
         else:
             canv.itemconfig(self.id, fill='black')
+
     def move(self):
         if self.y - 20 < 0:
             self.vy *= -1
@@ -188,6 +189,7 @@ class target():
         self.id_points = canv.create_text(30, 30, text=self.point, font='28')
         self.vy = 1
         self.id = 0
+
     def new_target(self, n):
         """ Инициализация новой цели. """
         x = self.x = rnd(600, 780)
@@ -225,14 +227,12 @@ class target():
             )
         else:
             for i in range(len(self.points) // 2):
-                self.points[2*i + 1] += self.vy
+                self.points[2 * i + 1] += self.vy
                 canv.coords(
                     self.id,
                     self.points
                 )
-                    
-                    
-                
+
     def move(self):
         if self.y - self.r < 0:
             self.vy *= -1
@@ -246,6 +246,7 @@ class target():
         canv.coords(self.id, -10, -10, -10, -10)
         self.point += point
 
+
 class Game():
     def __init__(self):
         g1 = gun(self)
@@ -258,7 +259,7 @@ class Game():
         self.balls = []
         canv.bind('<Button-1>', g1.fire2_start)
         canv.bind('<ButtonRelease-1>', g1.fire2_end)
-    
+
         canv.bind('<Motion>', g1.targetting)
         t1.live = 1
         t2.live = 1
@@ -270,15 +271,17 @@ class Game():
                 t2.move()
             for b in self.balls:
                 b.move()
-                if 0.5 <= b.timer <= 1 and abs(b.vy) > 3 :
+                if 0.5 <= b.timer <= 1 and abs(b.vy) > 3:
                     n1 = choice(numbers)
-                
-                    new_ball_1 = ball(y = b.y, x = b.x, n = n1, r=15 / math.sqrt(2), color = b.color)
+
+                    new_ball_1 = ball(
+                        y=b.y, x=b.x, n=n1, r=15 / math.sqrt(2), color=b.color)
                     new_ball_1.vx = b.vx + 5
                     new_ball_1.vy = b.vy + 5
                     self.balls += [new_ball_1]
                     n1 = choice(numbers)
-                    new_ball_2 = ball(y = b.y, x = b.x, n = n1, r=15 / math.sqrt(2), color = b.color)
+                    new_ball_2 = ball(
+                        y=b.y, x=b.x, n=n1, r=15 / math.sqrt(2), color=b.color)
                     new_ball_2.vx = b.vx - 5
                     new_ball_2.vy = b.vy - 5
                     self.balls += [new_ball_2]
@@ -315,6 +318,7 @@ class Game():
         time.sleep(3)
         canv.itemconfig(screen1, text='')
         new_game = Game()
+
 
 root = tkinter.Tk()
 fr = tkinter.Frame(root)
